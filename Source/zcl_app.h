@@ -34,6 +34,8 @@ extern "C" {
 #define ILLUMINANCE ZCL_CLUSTER_ID_MS_ILLUMINANCE_MEASUREMENT
 #define ILLUMINANCE_CONFIG ZCL_CLUSTER_ID_MS_ILLUMINANCE_LEVEL_SENSING_CONFIG
 
+
+#define ATTRID_RADIATION_SENSOR_SENSIVITY 0x0000
 #define ATTRID_RADIATION_EVENTS_PER_MINUTE 0x0001
 #define ATTRID_RADIATION_LEVEL_PER_HOUR 0x0002
 
@@ -58,7 +60,7 @@ extern const uint8 zclApp_ModelId[];
 extern const uint8 zclApp_PowerSource;
 extern uint16 zclApp_RadiationEventsPerMinute;
 extern uint16 zclApp_RadiationLevelParrotsPerHour; // RadiationEventsPerMinute * RadiationSensorSensivity
-extern uint8 zclApp_RadiationSensorSensivity;
+extern uint16 zclApp_RadiationSensorSensivity;
 
 // APP_TODO: Declare application specific attributes here
 

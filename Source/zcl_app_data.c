@@ -51,7 +51,7 @@ const uint8 zclApp_StackVersion = 4;
 const uint8 zclApp_ManufacturerName[] = {9, 'm', 'o', 'd', 'k', 'a', 'm', '.', 'r', 'u'};
 const uint8 zclApp_ModelId[] = {13, 'D', 'I', 'Y', 'R', 'u', 'Z', '_', 'G', 'e', 'i', 'g', 'e', 'r'};
 const uint8 zclApp_PowerSource = POWER_SOURCE_MAINS_1_PHASE;
-uint8 zclApp_RadiationSensorSensivity = DEFAULT_SENSOR_SENSIVITY; // pulses per mRoentgen
+uint16 zclApp_RadiationSensorSensivity = DEFAULT_SENSOR_SENSIVITY; // pulses per mRoentgen
 uint16 zclApp_RadiationEventsPerMinute = 0;                       // pulses per minute
 uint16 zclApp_RadiationLevelParrotsPerHour = 0;                   // parrots per hour
 
@@ -67,12 +67,12 @@ CONST zclAttrRec_t zclApp_AttrsFirstEP[] = {
     {BASIC, {ATTRID_BASIC_MANUFACTURER_NAME, ZCL_DATATYPE_CHAR_STR, R, (void *)zclApp_ManufacturerName}},
     {BASIC, {ATTRID_BASIC_MODEL_ID, ZCL_DATATYPE_CHAR_STR, R, (void *)zclApp_ModelId}},
     {BASIC, {ATTRID_BASIC_POWER_SOURCE, ZCL_DATATYPE_ENUM8, R, (void *)&zclApp_PowerSource}},
-    {BASIC, {ATTRID_CLUSTER_REVISION, ZCL_DATATYPE_UINT16, R, (void *)&zclApp_clusterRevision_all}},
+    {BASIC, {ATTRID_CLUSTER_REVISION, ZCL_UINT16, R, (void *)&zclApp_clusterRevision_all}},
     {BASIC, {ATTRID_BASIC_DATE_CODE, ZCL_DATATYPE_CHAR_STR, R, (void *)zclApp_DateCode}},
     {BASIC, {ATTRID_BASIC_SW_BUILD_ID, ZCL_UINT8, R, (void *)&zclApp_ApplicationVersion}},
-    {ILLUMINANCE_CONFIG, {0x0000, ZCL_UINT8, RW, (void *)&zclApp_RadiationSensorSensivity}},
-    {ILLUMINANCE, {ATTRID_RADIATION_EVENTS_PER_MINUTE, ZCL_DATATYPE_UINT16, RR, (void *)&zclApp_RadiationEventsPerMinute}},
-    {ILLUMINANCE, {ATTRID_RADIATION_LEVEL_PER_HOUR, ZCL_DATATYPE_UINT16, RR, (void *)&zclApp_RadiationLevelParrotsPerHour}}
+    {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_SENSOR_SENSIVITY, ZCL_UINT16, RW, (void *)&zclApp_RadiationSensorSensivity}},
+    {ILLUMINANCE, {ATTRID_RADIATION_EVENTS_PER_MINUTE, ZCL_UINT16, RR, (void *)&zclApp_RadiationEventsPerMinute}},
+    {ILLUMINANCE, {ATTRID_RADIATION_LEVEL_PER_HOUR, ZCL_UINT16, RR, (void *)&zclApp_RadiationLevelParrotsPerHour}}
 
 };
 
