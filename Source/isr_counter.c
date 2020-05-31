@@ -1,7 +1,12 @@
 #include "isr_counter.h"
 #include "Debug.h"
 
+#if defined(HAL_BOARD_TARGET)
+#define ISR_COUNTER_P0_PINS (BV(4))
+#elif defined(HAL_BOARD_CHDTECH_DEV)
 #define ISR_COUNTER_P0_PINS (BV(1) | BV(4))
+#endif
+
 #define ISR_COUNTER_P1_PINS 0x00
 #define ISR_COUNTER_P2_PINS 0x00
 
