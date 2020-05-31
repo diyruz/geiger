@@ -52,8 +52,10 @@ const uint8 zclApp_ManufacturerName[] = {9, 'm', 'o', 'd', 'k', 'a', 'm', '.', '
 const uint8 zclApp_ModelId[] = {13, 'D', 'I', 'Y', 'R', 'u', 'Z', '_', 'G', 'e', 'i', 'g', 'e', 'r'};
 const uint8 zclApp_PowerSource = POWER_SOURCE_MAINS_1_PHASE;
 uint16 zclApp_RadiationSensorSensivity = DEFAULT_SENSOR_SENSIVITY; // pulses per mRoentgen
-uint16 zclApp_RadiationEventsPerMinute = 0;                       // pulses per minute
-uint16 zclApp_RadiationLevelParrotsPerHour = 0;                   // parrots per hour
+uint8 zclApp_RadiationLedFeedback = TRUE;
+uint8 zclApp_RadiationBuzzerFeedback = FALSE;
+uint16 zclApp_RadiationEventsPerMinute = 0;     // pulses per minute
+uint16 zclApp_RadiationLevelParrotsPerHour = 0; // parrots per hour
 
 /*********************************************************************
  * ATTRIBUTE DEFINITIONS - Uses REAL cluster IDs
@@ -70,13 +72,16 @@ CONST zclAttrRec_t zclApp_AttrsFirstEP[] = {
     {BASIC, {ATTRID_CLUSTER_REVISION, ZCL_UINT16, R, (void *)&zclApp_clusterRevision_all}},
     {BASIC, {ATTRID_BASIC_DATE_CODE, ZCL_DATATYPE_CHAR_STR, R, (void *)zclApp_DateCode}},
     {BASIC, {ATTRID_BASIC_SW_BUILD_ID, ZCL_UINT8, R, (void *)&zclApp_ApplicationVersion}},
-    {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_SENSOR_SENSIVITY, ZCL_UINT16, RW, (void *)&zclApp_RadiationSensorSensivity}},
     {ILLUMINANCE, {ATTRID_RADIATION_EVENTS_PER_MINUTE, ZCL_UINT16, RR, (void *)&zclApp_RadiationEventsPerMinute}},
-    {ILLUMINANCE, {ATTRID_RADIATION_LEVEL_PER_HOUR, ZCL_UINT16, RR, (void *)&zclApp_RadiationLevelParrotsPerHour}}
+    {ILLUMINANCE, {ATTRID_RADIATION_LEVEL_PER_HOUR, ZCL_UINT16, RR, (void *)&zclApp_RadiationLevelParrotsPerHour}},
+
+    {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_SENSOR_SENSIVITY, ZCL_UINT16, RW, (void *)&zclApp_RadiationSensorSensivity}},
+    {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_LED_FEEDBACK, ZCL_DATATYPE_BOOLEAN, RW, (void *)&zclApp_RadiationLedFeedback}},
+    {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_BUZZER_FEEDBACK, ZCL_DATATYPE_BOOLEAN, RW, (void *)&zclApp_RadiationBuzzerFeedback}},
 
 };
 
-uint8 CONST zclApp_AttrsList = (sizeof(zclApp_AttrsFirstEP) / sizeof(zclApp_AttrsFirstEP[0]));
+uint8 CONST zclApp_AttrsCount = (sizeof(zclApp_AttrsFirstEP) / sizeof(zclApp_AttrsFirstEP[0]));
 
 const cId_t zclApp_InClusterList[] = {ZCL_CLUSTER_ID_GEN_BASIC};
 
@@ -98,4 +103,8 @@ SimpleDescriptionFormat_t zclApp_FirstEP = {
     (cId_t *)zclApp_OutClusterList //  byte *pAppInClusterList;
 };
 
-void zclApp_ResetAttributesToDefaultValues(void) { zclApp_RadiationSensorSensivity = DEFAULT_SENSOR_SENSIVITY; }
+void zclApp_ResetAttributesToDefaultValues(void) {
+    zclApp_RadiationSensorSensivity = DEFAULT_SENSOR_SENSIVITY;
+    zclApp_RadiationLedFeedback = TRUE;
+    zclApp_RadiationBuzzerFeedback = FALSE;
+}

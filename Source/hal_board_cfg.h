@@ -174,9 +174,9 @@ extern void MAC_RfFrontendSetup(void);
 /* ----------- LED's ---------- */
 
 #if defined(HAL_BOARD_TARGET)
-  #define LED1_BV           BV(1)
-  #define LED1_SBIT         P0_1
-  #define LED1_DDR          P0DIR
+  #define LED1_BV           BV(4)
+  #define LED1_SBIT         P1_4
+  #define LED1_DDR          P1DIR
   #define LED1_POLARITY     ACTIVE_HIGH
 
 #elif defined(HAL_BOARD_CHDTECH_DEV)

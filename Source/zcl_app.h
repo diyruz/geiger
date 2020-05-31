@@ -23,11 +23,14 @@ extern "C" {
  * MACROS
  */
 
-#define NW_RadiationSensorSensivity 0x1000
+#define NW_RadiationSensorSensivity 0x0401
+#define NW_RadiationSensorLedFeedback 0x0402
+#define NW_RadiationSensorBuzzerFeedback 0x0403
 
 #define R ACCESS_CONTROL_READ
-#define RW R | ACCESS_CONTROL_WRITE
-#define RR R | ACCESS_REPORTABLE
+//ACCESS_CONTROL_AUTH_WRITE
+#define RW (R | ACCESS_CONTROL_WRITE | ACCESS_CONTROL_AUTH_WRITE)
+#define RR (R | ACCESS_REPORTABLE)
 
 #define BASIC ZCL_CLUSTER_ID_GEN_BASIC
 #define POWER_CFG ZCL_CLUSTER_ID_GEN_POWER_CFG
@@ -35,14 +38,16 @@ extern "C" {
 #define ILLUMINANCE_CONFIG ZCL_CLUSTER_ID_MS_ILLUMINANCE_LEVEL_SENSING_CONFIG
 
 
-#define ATTRID_RADIATION_SENSOR_SENSIVITY 0x0000
-#define ATTRID_RADIATION_EVENTS_PER_MINUTE 0x0001
-#define ATTRID_RADIATION_LEVEL_PER_HOUR 0x0002
+#define ATTRID_RADIATION_SENSOR_SENSIVITY 0xA
+#define ATTRID_RADIATION_LED_FEEDBACK 0xB
+#define ATTRID_RADIATION_BUZZER_FEEDBACK 0xC
+
+#define ATTRID_RADIATION_EVENTS_PER_MINUTE ATTRID_MS_ILLUMINANCE_MEASURED_VALUE
+#define ATTRID_RADIATION_LEVEL_PER_HOUR ATTRID_MS_ILLUMINANCE_TOLERANCE
 
 
 #define ZCL_UINT8 ZCL_DATATYPE_UINT8
-#define ZCL_UINT16 ZCL_DATATYPE_INT16
-
+#define ZCL_UINT16 ZCL_DATATYPE_UINT16
 /*********************************************************************
  * TYPEDEFS
  */
@@ -53,7 +58,7 @@ extern "C" {
 
 extern SimpleDescriptionFormat_t zclApp_FirstEP;
 extern CONST zclAttrRec_t zclApp_AttrsFirstEP[];
-extern CONST uint8 zclApp_AttrsList;
+extern CONST uint8 zclApp_AttrsCount;
 
 extern const uint8 zclApp_ManufacturerName[];
 extern const uint8 zclApp_ModelId[];
@@ -61,6 +66,8 @@ extern const uint8 zclApp_PowerSource;
 extern uint16 zclApp_RadiationEventsPerMinute;
 extern uint16 zclApp_RadiationLevelParrotsPerHour; // RadiationEventsPerMinute * RadiationSensorSensivity
 extern uint16 zclApp_RadiationSensorSensivity;
+extern uint8 zclApp_RadiationLedFeedback;
+extern uint8 zclApp_RadiationBuzzerFeedback;
 
 // APP_TODO: Declare application specific attributes here
 

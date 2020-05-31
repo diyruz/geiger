@@ -71,7 +71,7 @@
         <ShowTimeSum>1</ShowTimeSum>
     </DataLog>
     <Breakpoints2>
-        <Bp0>_ 1 "STD_CODE2" "{$PROJ_DIR$\..\Source\isr_counter.c}.73.9" 0 0 1 "" 0 ""</Bp0>
+        <Bp0>_ 1 "STD_CODE2" "{$PROJ_DIR$\..\Source\isr_counter.c}.73.1" 0 0 1 "" 0 ""</Bp0>
         <Count>1</Count>
     </Breakpoints2>
     <Interrupts>

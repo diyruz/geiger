@@ -12,7 +12,6 @@
 
 #define ZCL_READ
 #define ZCL_WRITE
-
 #define ZCL_BASIC
 #define ZCL_IDENTIFY
 #define ZCL_REPORTING_DEVICE
