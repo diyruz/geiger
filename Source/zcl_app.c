@@ -271,7 +271,6 @@ static void zclApp_RestoreAttributesFromNV(void) {
 
 void zclApp_RadioactiveEventCB(void) {
     LREPMaster("Event \r\n");
-    osal_start_timerEx(zclApp_TaskID, APP_REPORT_EVT, 20);
 
     if (zclApp_Config.LedFeedback) {
         HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
