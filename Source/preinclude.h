@@ -1,7 +1,7 @@
 #define TC_LINKKEY_JOIN
 #define NV_INIT
 #define NV_RESTORE
-#define INT_HEAP_LEN 2688
+#define INT_HEAP_LEN 2685
 
 #define TP2_LEGACY_ZC
 //patch sdk
@@ -25,17 +25,15 @@
 #endif
 #define DEFAULT_CHANLIST 0x07FFF800
 
-#define ISR_KEYINTERRUPT
 #define HAL_BUZZER FALSE
 #define HAL_KEY FALSE
 
 #define HAL_LED TRUE
 #define HAL_ADC FALSE
+#define HAL_LCD FALSE
 
 #define BLINK_LEDS TRUE
 
-#define INTER_PAN
-#define BDB_TL_TARGET
 
 
 //one of this boards
@@ -52,8 +50,6 @@
 
 #if defined(HAL_BOARD_TARGET)
     #define HAL_UART FALSE
-    #define HAL_PA_LNA
-    #define HAL_PA_LNA_CC2592
     #define APP_TX_POWER TX_PWR_PLUS_19
 
 #elif defined(HAL_BOARD_CHDTECH_DEV)

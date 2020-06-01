@@ -7,10 +7,10 @@
 #include "ZDApp.h"
 #include "nwk.h"
 
-#include "stub_aps.h"
+// #include "stub_aps.h"
 
 
-#include "bdb_touchlink_target.h"
+// #include "bdb_touchlink_target.h"
 
 #include "bdb_interface.h"
 #include "zcl_app.h"
@@ -20,8 +20,8 @@ const pTaskEventHandlerFn tasksArr[] = {macEventLoop,
                                         Hal_ProcessEvent,
                                         APS_event_loop,
                                         ZDApp_event_loop,
-                                        StubAPS_ProcessEvent,
-                                        touchLinkTarget_event_loop,
+                                        // StubAPS_ProcessEvent,
+                                        // touchLinkTarget_event_loop,
                                         zcl_event_loop,
                                         bdb_event_loop,
                                         zclApp_event_loop};
@@ -39,8 +39,8 @@ void osalInitTasks(void) {
     Hal_Init(taskID++);
     APS_Init(taskID++);
     ZDApp_Init(taskID++);
-    StubAPS_Init( taskID++ );
-    touchLinkTarget_Init( taskID++ );
+    // StubAPS_Init( taskID++ );
+    // touchLinkTarget_Init( taskID++ );
     zcl_Init(taskID++);
     bdb_Init(taskID++);
     zclApp_Init(taskID);

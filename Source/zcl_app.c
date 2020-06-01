@@ -61,8 +61,6 @@ byte zclApp_TaskID;
  * LOCAL VARIABLES
  */
 
-afAddrType_t inderect_DstAddr = {.addrMode = (afAddrMode_t)AddrNotPresent, .endPoint = 0, .addr.shortAddr = 0};
-
 /*********************************************************************
  * LOCAL FUNCTIONS
  */
@@ -72,10 +70,8 @@ static void zclApp_Report(void);
 // static void zclApp_Rejoin(void);
 
 static void zclApp_ProcessCommissioningStatus(bdbCommissioningModeMsg_t *bdbCommissioningModeMsg);
-static void zclApp_ProcessTouchlinkTargetEnable(uint8 enable);
 
 static void zclApp_BasicResetCB(void);
-static void zclApp_BasicIdentifyCB(zclIdentifyTriggerEffect_t *pCmd);
 static void zclApp_RestoreAttributesFromNV(void);
 static void zclApp_SaveAttributesToNV(void);
 
@@ -86,19 +82,19 @@ static void zclApp_RadioactiveEventCB(void);
  * ZCL General Profile Callback table
  */
 static zclGeneral_AppCallbacks_t zclApp_CmdCallbacks = {
-    zclApp_BasicResetCB,    // Basic Cluster Reset command
-    zclApp_BasicIdentifyCB, // Identify Trigger Effect command
-    NULL,                   // On/Off cluster commands
-    NULL,                   // On/Off cluster enhanced command Off with Effect
-    NULL,                   // On/Off cluster enhanced command On with Recall Global Scene
-    NULL,                   // On/Off cluster enhanced command On with Timed Off
-    NULL,                   // RSSI Location command
-    NULL                    // RSSI Location Response command
+    zclApp_BasicResetCB, // Basic Cluster Reset command
+    NULL,                // Identify Trigger Effect command
+    NULL,                // On/Off cluster commands
+    NULL,                // On/Off cluster enhanced command Off with Effect
+    NULL,                // On/Off cluster enhanced command On with Recall Global Scene
+    NULL,                // On/Off cluster enhanced command On with Timed Off
+    NULL,                // RSSI Location command
+    NULL                 // RSSI Location Response command
 };
-
 void zclApp_Init(byte task_id) {
     DebugInit();
     zclApp_RestoreAttributesFromNV();
+    LREP("Sensivity %d led %d buzzer %d \r\n", zclApp_Config.SensorSensivity, zclApp_Config.LedFeedback, zclApp_Config.BuzzerFeedback);
     // this is important to allow connects throught routers
     // to make this work, coordinator should be compiled with this flag #define TP2_LEGACY_ZC
     requestNewTrustCenterLinkKey = FALSE;
@@ -116,28 +112,17 @@ void zclApp_Init(byte task_id) {
 
     bdb_RegisterBindNotificationCB(zclApp_BindNotification);
     bdb_RegisterCommissioningStatusCB(zclApp_ProcessCommissioningStatus);
-    bdb_RegisterTouchlinkTargetEnableCB(zclApp_ProcessTouchlinkTargetEnable);
-    LREP("zgReadStartupOptions %d \r\n", zgReadStartupOptions());
-    if (zgReadStartupOptions() & ZCD_STARTOPT_DEFAULT_NETWORK_STATE) {
-        LREPMaster("BDB_COMMISSIONING_MODE_NWK_STEERING\r\n");
-        bdb_StartCommissioning(BDB_COMMISSIONING_MODE_NWK_STEERING);
-    } else {
-        LREPMaster("BDB_COMMISSIONING_REJOIN_EXISTING_NETWORK_ON_STARTUP\r\n");
-        bdb_StartCommissioning(BDB_COMMISSIONING_REJOIN_EXISTING_NETWORK_ON_STARTUP);
-    }
-
-    touchLinkTarget_EnableCommissioning(TOUCHLINK_TARGET_PERPETUAL);
-
-    LREP("Started build %s \r\n", zclApp_DateCodeNT);
 
     ZMacSetTransmitPower(APP_TX_POWER);
+
+    bdb_StartCommissioning(BDB_COMMISSIONING_MODE_NWK_STEERING | BDB_COMMISSIONING_MODE_FINDING_BINDING);
+
+
+    LREP("Build %s \r\n", zclApp_DateCodeNT);
 
     zclApp_InitCounter();
     zclApp_RegisterCounterCallback(0, zclApp_RadioactiveEventCB);
     osal_start_reload_timer(zclApp_TaskID, APP_REPORT_EVT, APP_REPORT_DELAY);
-
-    LREP("Sensivity %d led_feedback %d buzzer_feedback %d\r\n", zclApp_RadiationSensorSensivity, zclApp_RadiationLedFeedback,
-         zclApp_RadiationBuzzerFeedback);
 }
 
 static void zclApp_ProcessCommissioningStatus(bdbCommissioningModeMsg_t *bdbCommissioningModeMsg) {
@@ -194,8 +179,16 @@ uint16 zclApp_event_loop(uint8 task_id, uint16 events) {
 
     if (events & SYS_EVENT_MSG) {
         while ((MSGpkt = (afIncomingMSGPacket_t *)osal_msg_receive(zclApp_TaskID))) {
-            LREP("MSGpkt->hdr.event %d\r\n", MSGpkt->hdr.event);
+            LREP("MSGpkt->hdr.event 0x%X\r\n", MSGpkt->hdr.event);
             switch (MSGpkt->hdr.event) {
+            case ZDO_STATE_CHANGE:
+                HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
+                LREP("NwkState=%d\r\n", (devStates_t)(MSGpkt->hdr.status));
+                break;
+
+            case ZCL_INCOMING_MSG:
+                LREP("ZCL_INCOMING_MSG 0x%X\r\n", ((zclIncomingMsg_t *)MSGpkt)->zclHdr.commandID);
+                break;
             default:
                 break;
             }
@@ -241,22 +234,14 @@ static void zclApp_Report(void) {
     LREP("pulse counter: port0Value=%d \r\n", port0Value);
 
     zclApp_RadiationEventsPerMinute = port0Value;
-    zclApp_RadiationLevelParrotsPerHour = zclApp_RadiationEventsPerMinute * zclApp_RadiationSensorSensivity;
-
+    zclApp_RadiationLevelParrotsPerHour = zclApp_RadiationEventsPerMinute * zclApp_Config.SensorSensivity;
     bdb_RepChangedAttrValue(zclApp_FirstEP.EndPoint, ILLUMINANCE, ATTRID_RADIATION_EVENTS_PER_MINUTE);
 }
-
-static void zclApp_ProcessTouchlinkTargetEnable(uint8 enable) { LREP("zclApp_ProcessTouchlinkTargetEnable %d \r\n", enable); }
 
 static void zclApp_BasicResetCB(void) {
     LREPMaster("BasicResetCB\r\n");
     zclApp_ResetAttributesToDefaultValues();
     zclApp_SaveAttributesToNV();
-}
-
-static void zclApp_BasicIdentifyCB(zclIdentifyTriggerEffect_t *pCmd) {
-    HalLedSet(HAL_LED_1, HAL_LED_MODE_FLASH);
-    LREP("zclApp_BasicIdentifyCB %d \r\n", pCmd->srcAddr);
 }
 
 static ZStatus_t zclApp_ReadWriteAuthCB(afAddrType_t *srcAddr, zclAttrRec_t *pAttr, uint8 oper) {
@@ -267,154 +252,34 @@ static ZStatus_t zclApp_ReadWriteAuthCB(afAddrType_t *srcAddr, zclAttrRec_t *pAt
 }
 
 static void zclApp_SaveAttributesToNV(void) {
-    LREPMaster("Saving attributes to NV\r\n");
-
-    if (osal_nv_item_init(NW_RadiationSensorSensivity, sizeof(zclApp_RadiationSensorSensivity), &zclApp_RadiationSensorSensivity) ==
-        SUCCESS) {
-        osal_nv_write(NW_RadiationSensorSensivity, 0, sizeof(zclApp_RadiationSensorSensivity), &zclApp_RadiationSensorSensivity);
-    }
-
-    if (osal_nv_item_init(NW_RadiationSensorLedFeedback, sizeof(zclApp_RadiationLedFeedback), &zclApp_RadiationLedFeedback) == SUCCESS) {
-        osal_nv_write(NW_RadiationSensorLedFeedback, 0, sizeof(zclApp_RadiationLedFeedback), &zclApp_RadiationLedFeedback);
-    }
-
-    if (osal_nv_item_init(NW_RadiationSensorBuzzerFeedback, sizeof(zclApp_RadiationBuzzerFeedback), &zclApp_RadiationBuzzerFeedback) ==
-        SUCCESS) {
-        osal_nv_write(NW_RadiationSensorBuzzerFeedback, 0, sizeof(zclApp_RadiationBuzzerFeedback), &zclApp_RadiationBuzzerFeedback);
-    }
+    uint8 writeStatus = osal_nv_write(NW_APP_CONFIG, 0, sizeof(application_config_t), &zclApp_Config);
+    LREP("Saving attributes to NV write=%d\r\n", writeStatus);
 }
 
 static void zclApp_RestoreAttributesFromNV(void) {
-    LREPMaster("Restoring attributes to NV\r\n");
-    if (osal_nv_item_init(NW_RadiationSensorSensivity, sizeof(zclApp_RadiationSensorSensivity), &zclApp_RadiationSensorSensivity) ==
-        ZSUCCESS) {
-        osal_nv_read(NW_RadiationSensorSensivity, 0, sizeof(zclApp_RadiationSensorSensivity), &zclApp_RadiationSensorSensivity);
+    uint8 status = osal_nv_item_init(NW_APP_CONFIG, sizeof(application_config_t), NULL);
+    LREP("Restoring attributes from NV  status=%d \r\n", status);
+    if (status == NV_ITEM_UNINIT) {
+        uint8 writeStatus = osal_nv_write(NW_APP_CONFIG, 0, sizeof(application_config_t), &zclApp_Config);
+        LREP("NV was empty, writing %d\r\n", writeStatus);
     }
-
-    if (osal_nv_item_init(NW_RadiationSensorLedFeedback, sizeof(zclApp_RadiationLedFeedback), &zclApp_RadiationLedFeedback) == ZSUCCESS)
-    {
-        osal_nv_read(NW_RadiationSensorLedFeedback, 0, sizeof(zclApp_RadiationLedFeedback), &zclApp_RadiationLedFeedback);
-    }
-
-    if (osal_nv_item_init(NW_RadiationSensorBuzzerFeedback, sizeof(zclApp_RadiationBuzzerFeedback), &zclApp_RadiationBuzzerFeedback) ==
-        ZSUCCESS) {
-        osal_nv_read(NW_RadiationSensorBuzzerFeedback, 0, sizeof(zclApp_RadiationBuzzerFeedback), &zclApp_RadiationBuzzerFeedback);
+    if (status == ZSUCCESS) {
+        LREPMaster("Reading from NV\r\n");
+        osal_nv_read(NW_APP_CONFIG, 0, sizeof(application_config_t), &zclApp_Config);
     }
 }
 
 void zclApp_RadioactiveEventCB(void) {
     LREPMaster("Event \r\n");
-    if (zclApp_RadiationLedFeedback) {
+    osal_start_timerEx(zclApp_TaskID, APP_REPORT_EVT, 20);
+
+    if (zclApp_Config.LedFeedback) {
         HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
     }
 
-    if (zclApp_RadiationBuzzerFeedback) {
+    if (zclApp_Config.BuzzerFeedback) {
         // TODO: buzzer feedback
     }
 }
-
-
-// ZStatus_t zclApp_ReadWriteAttrCB( uint16 clusterId, uint16 attrId, uint8 oper,
-//                                          uint8 *pValue, uint16 *pLen )
-// {
-
-//     ZStatus_t status = ZSuccess;
-//   uint16 tempAttr;
-//   uint32 attrValue;
-//   afIncomingMSGPacket_t *origPkt;
-
-//   origPkt = zcl_getRawAFMsg();
-
-//   switch ( oper )
-//   {
-//     case ZCL_OPER_LEN:
-//     switch (attrId)
-//     {
-//     case ATTRID_RADIATION_SENSOR_SENSIVITY:
-//         break;
-//         case ATTRID_RADIATION_LED_FEEDBACK:
-//         case 
-    
-//     default:
-//         break;
-//     }
-//       if ( ( attrId == ATTRID_DIAGNOSTIC_LAST_MESSAGE_LQI ) ||
-//            ( attrId == ATTRID_DIAGNOSTIC_LAST_MESSAGE_RSSI ) )
-//       {
-//         *pLen = 1;
-//       }
-//       else if ( attrId == ATTRID_DIAGNOSTIC_AVERAGE_MAC_RETRY_PER_APS_MESSAGE_SENT )
-//       {
-//         *pLen = 2;
-//       }
-//       // The next function call only returns the length for attributes that are defined
-//       // in lower layers
-//       else if ( zclDiagnostic_GetAttribData( attrId, &tempAttr, pLen ) != ZSuccess )
-//       {
-//         *pLen = 0;
-//         status = ZFailure;  // invalid length
-//       }
-//       break;
-
-//     case ZCL_OPER_READ:
-//       // Identify if incoming msg is LQI or RSSI attribute
-//       // and return the LQI and RSSI of the incoming values
-//       if ( attrId == ATTRID_DIAGNOSTIC_LAST_MESSAGE_LQI )
-//       {
-//         *pLen = 1;
-//         attrValue = origPkt->LinkQuality;
-//       }
-//       else if ( attrId == ATTRID_DIAGNOSTIC_LAST_MESSAGE_RSSI )
-//       {
-//         //origPkt = zcl_getRawAFMsg();
-//         *pLen = 1;
-//         attrValue = origPkt->rssi;
-//       }
-//       else if ( zclDiagnostic_GetStatsAttr( attrId, &attrValue, pLen ) == ZSuccess )
-//       {
-//         if ( ( attrId == ATTRID_DIAGNOSTIC_MAC_TX_UCAST_RETRY ) ||
-//              ( attrId == ATTRID_DIAGNOSTIC_MAC_TX_UCAST_FAIL  ) )
-//         {
-//           // The lower layer counter is a 32 bit counter, report the higher 16 bit value
-//           // util the lower layer counter wraps-up
-//           if ( attrValue > 0x0000FFFF )
-//           {
-//             attrValue = 0x0000FFFF;
-//           }
-//         }
-//       }
-//       else
-//       {
-//         *pLen = 0;
-//         status = ZFailure;  // invalid attribute
-//       }
-
-//       if ( *pLen == 1 )
-//       {
-//         pValue[0] = BREAK_UINT32( attrValue, 0 );
-//       }
-//       else if ( *pLen == 2 )
-//       {
-//         pValue[0] = LO_UINT16( attrValue );
-//         pValue[1] = HI_UINT16( attrValue );
-//       }
-//       else if ( *pLen == 4 )
-//       {
-//         pValue[0] = BREAK_UINT32( attrValue, 0 );
-//         pValue[1] = BREAK_UINT32( attrValue, 1 );
-//         pValue[2] = BREAK_UINT32( attrValue, 2 );
-//         pValue[3] = BREAK_UINT32( attrValue, 3 );
-//       }
-
-//       break;
-
-//     case ZCL_OPER_WRITE:
-//       status = ZFailure;  // All attributes in Diagnostics cluster are READ ONLY
-//       break;
-//   }
-
-//   return ( status );
-// }
-
 /****************************************************************************
 ****************************************************************************/

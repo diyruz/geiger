@@ -175,7 +175,7 @@
                 </option>
                 <option>
                     <name>General Xdata Stack Size</name>
-                    <state>0x2F6</state>
+                    <state>0x300</state>
                 </option>
                 <option>
                     <name>General Ext Stack Size</name>
@@ -469,8 +469,6 @@
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$</state>
                     <state>$PROJ_DIR$\..\Source</state>
-                    <state>$PROJ_DIR$\..\BME280_driver</state>
-                    <state>$PROJ_DIR$\..\Source\hal</state>
                     <state>$PROJ_DIR$\..\..\Source</state>
                     <state>$PROJ_DIR$\..\..\..\ZMain\TI2530DB</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Components\hal\include</state>
@@ -1063,7 +1061,7 @@
                 </option>
                 <option>
                     <name>Linker Extra Options Edit</name>
-                    <state>-C $PROJ_DIR$\..\..\..\Libraries\TI2530DB\bin\EndDevice-Pro.lib</state>
+                    <state>-C $PROJ_DIR$\..\..\..\Libraries\TI2530DB\bin\Router-Pro.lib</state>
                     <state>-C $PROJ_DIR$\..\..\..\Libraries\TI2530DB\bin\Security.lib</state>
                     <state>-C $PROJ_DIR$\..\..\..\Libraries\TIMAC\bin\TIMAC-CC2530.lib</state>
                 </option>
@@ -1316,7 +1314,7 @@
                 </option>
                 <option>
                     <name>General Xdata Stack Size</name>
-                    <state>0x300</state>
+                    <state>0x400</state>
                 </option>
                 <option>
                     <name>General Ext Stack Size</name>
@@ -1447,6 +1445,7 @@
                 <option>
                     <name>CCDefines</name>
                     <state>HAL_BOARD_TARGET</state>
+                    <state>HAL_PA_LNA_CC2592</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -1602,7 +1601,7 @@
                 </option>
                 <option>
                     <name>Compiler Extra Options Edit</name>
-                    <state>-f $PROJ_DIR$\..\..\..\Tools\CC2530DB\f8wEndev.cfg</state>
+                    <state>-f $PROJ_DIR$\..\..\..\Tools\CC2530DB\f8wRouter.cfg</state>
                     <state>-f $PROJ_DIR$\..\..\..\Tools\CC2530DB\f8wConfig.cfg</state>
                     <state>-f $PROJ_DIR$\..\..\..\Tools\CC2530DB\f8wZCL.cfg</state>
                 </option>
@@ -2202,7 +2201,7 @@
                 </option>
                 <option>
                     <name>Linker Extra Options Edit</name>
-                    <state>-C $PROJ_DIR$\..\..\..\Libraries\TI2530DB\bin\EndDevice-Pro.lib</state>
+                    <state>-C $PROJ_DIR$\..\..\..\Libraries\TI2530DB\bin\Router-Pro.lib</state>
                     <state>-C $PROJ_DIR$\..\..\..\Libraries\TI2530DB\bin\Security.lib</state>
                     <state>-C $PROJ_DIR$\..\..\..\Libraries\TIMAC\bin\TIMAC-CC2530.lib</state>
                 </option>

@@ -23,9 +23,7 @@ extern "C" {
  * MACROS
  */
 
-#define NW_RadiationSensorSensivity 0x0401
-#define NW_RadiationSensorLedFeedback 0x0402
-#define NW_RadiationSensorBuzzerFeedback 0x0403
+#define NW_APP_CONFIG 0x0401
 
 #define R ACCESS_CONTROL_READ
 //ACCESS_CONTROL_AUTH_WRITE
@@ -52,6 +50,13 @@ extern "C" {
  * TYPEDEFS
  */
 
+typedef struct
+{
+    uint16 SensorSensivity;
+    uint8 LedFeedback;
+    uint8 BuzzerFeedback;
+}  application_config_t;
+
 /*********************************************************************
  * VARIABLES
  */
@@ -65,9 +70,7 @@ extern const uint8 zclApp_ModelId[];
 extern const uint8 zclApp_PowerSource;
 extern uint16 zclApp_RadiationEventsPerMinute;
 extern uint16 zclApp_RadiationLevelParrotsPerHour; // RadiationEventsPerMinute * RadiationSensorSensivity
-extern uint16 zclApp_RadiationSensorSensivity;
-extern uint8 zclApp_RadiationLedFeedback;
-extern uint8 zclApp_RadiationBuzzerFeedback;
+extern application_config_t zclApp_Config;
 
 // APP_TODO: Declare application specific attributes here
 

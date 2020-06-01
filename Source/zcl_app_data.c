@@ -33,7 +33,7 @@
 /*********************************************************************
  * MACROS
  */
-#define DEFAULT_SENSOR_SENSIVITY 65; // pulses per mRoentgen
+
 /*********************************************************************
  * GLOBAL VARIABLES
  */
@@ -51,9 +51,12 @@ const uint8 zclApp_StackVersion = 4;
 const uint8 zclApp_ManufacturerName[] = {9, 'm', 'o', 'd', 'k', 'a', 'm', '.', 'r', 'u'};
 const uint8 zclApp_ModelId[] = {13, 'D', 'I', 'Y', 'R', 'u', 'Z', '_', 'G', 'e', 'i', 'g', 'e', 'r'};
 const uint8 zclApp_PowerSource = POWER_SOURCE_MAINS_1_PHASE;
-uint16 zclApp_RadiationSensorSensivity = DEFAULT_SENSOR_SENSIVITY; // pulses per mRoentgen
-uint8 zclApp_RadiationLedFeedback = TRUE;
-uint8 zclApp_RadiationBuzzerFeedback = FALSE;
+application_config_t zclApp_Config = {
+  .SensorSensivity = 65,
+  .LedFeedback = TRUE,
+  .BuzzerFeedback = FALSE
+};
+
 uint16 zclApp_RadiationEventsPerMinute = 0;     // pulses per minute
 uint16 zclApp_RadiationLevelParrotsPerHour = 0; // parrots per hour
 
@@ -75,9 +78,9 @@ CONST zclAttrRec_t zclApp_AttrsFirstEP[] = {
     {ILLUMINANCE, {ATTRID_RADIATION_EVENTS_PER_MINUTE, ZCL_UINT16, RR, (void *)&zclApp_RadiationEventsPerMinute}},
     {ILLUMINANCE, {ATTRID_RADIATION_LEVEL_PER_HOUR, ZCL_UINT16, RR, (void *)&zclApp_RadiationLevelParrotsPerHour}},
 
-    {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_SENSOR_SENSIVITY, ZCL_UINT16, RW, (void *)&zclApp_RadiationSensorSensivity}},
-    {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_LED_FEEDBACK, ZCL_DATATYPE_BOOLEAN, RW, (void *)&zclApp_RadiationLedFeedback}},
-    {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_BUZZER_FEEDBACK, ZCL_DATATYPE_BOOLEAN, RW, (void *)&zclApp_RadiationBuzzerFeedback}},
+    {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_SENSOR_SENSIVITY, ZCL_UINT16, RW, (void *)&zclApp_Config.SensorSensivity}},
+    {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_LED_FEEDBACK, ZCL_DATATYPE_BOOLEAN, RW, (void *)&zclApp_Config.LedFeedback}},
+    {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_BUZZER_FEEDBACK, ZCL_DATATYPE_BOOLEAN, RW, (void *)&zclApp_Config.BuzzerFeedback}},
 
 };
 
@@ -104,7 +107,7 @@ SimpleDescriptionFormat_t zclApp_FirstEP = {
 };
 
 void zclApp_ResetAttributesToDefaultValues(void) {
-    zclApp_RadiationSensorSensivity = DEFAULT_SENSOR_SENSIVITY;
-    zclApp_RadiationLedFeedback = TRUE;
-    zclApp_RadiationBuzzerFeedback = FALSE;
+    zclApp_Config.LedFeedback = TRUE;
+    zclApp_Config.BuzzerFeedback = FALSE;
+    zclApp_Config.SensorSensivity = 65;
 }
