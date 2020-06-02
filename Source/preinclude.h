@@ -47,7 +47,7 @@
 #define HAL_UART TRUE
 #define HAL_UART_ISR 2
 #define HAL_UART_DMA 1
-#define INT_HEAP_LEN (2685 - 0x4B - 0xB8)
+#define INT_HEAP_LEN (2685 - 0x4B - 0xB9)
 #endif
 
 #if defined(HAL_BOARD_TARGET)
