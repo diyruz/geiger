@@ -51,14 +51,23 @@ const uint8 zclApp_StackVersion = 4;
 const uint8 zclApp_ManufacturerName[] = {9, 'm', 'o', 'd', 'k', 'a', 'm', '.', 'r', 'u'};
 const uint8 zclApp_ModelId[] = {13, 'D', 'I', 'Y', 'R', 'u', 'Z', '_', 'G', 'e', 'i', 'g', 'e', 'r'};
 const uint8 zclApp_PowerSource = POWER_SOURCE_MAINS_1_PHASE;
-application_config_t zclApp_Config = {
-  .SensorSensivity = 65,
-  .LedFeedback = TRUE,
-  .BuzzerFeedback = FALSE
-};
+
+#define DEFAULT_SensorSensivity 65
+#define DEFAULT_AlertTreshold 100
+#define DEFAULT_LedFeedback TRUE
+#define DEFAULT_BuzzerFeedback FALSE
+#define DEFAULT_SensorsCount 1
+#define DEFAULT_SensorType SBM_20
+
+application_config_t zclApp_Config = {.SensorSensivity = DEFAULT_SensorSensivity,
+                                      .AlertTreshold = DEFAULT_AlertTreshold,
+                                      .LedFeedback = DEFAULT_LedFeedback,
+                                      .BuzzerFeedback = DEFAULT_BuzzerFeedback,
+                                      .SensorsCount = DEFAULT_SensorsCount,
+                                      .SensorType = DEFAULT_SensorType};
 
 uint16 zclApp_RadiationEventsPerMinute = 0;     // pulses per minute
-uint16 zclApp_RadiationLevelParrotsPerHour = 0; // parrots per hour
+uint32 zclApp_RadiationLevelParrotsPerHour = 0; // parrots per hour
 
 /*********************************************************************
  * ATTRIBUTE DEFINITIONS - Uses REAL cluster IDs
@@ -76,11 +85,14 @@ CONST zclAttrRec_t zclApp_AttrsFirstEP[] = {
     {BASIC, {ATTRID_BASIC_DATE_CODE, ZCL_DATATYPE_CHAR_STR, R, (void *)zclApp_DateCode}},
     {BASIC, {ATTRID_BASIC_SW_BUILD_ID, ZCL_UINT8, R, (void *)&zclApp_ApplicationVersion}},
     {ILLUMINANCE, {ATTRID_RADIATION_EVENTS_PER_MINUTE, ZCL_UINT16, RR, (void *)&zclApp_RadiationEventsPerMinute}},
-    {ILLUMINANCE, {ATTRID_RADIATION_LEVEL_PER_HOUR, ZCL_UINT16, RR, (void *)&zclApp_RadiationLevelParrotsPerHour}},
+    {ILLUMINANCE, {ATTRID_RADIATION_LEVEL_PER_HOUR, ZCL_UINT32, RR, (void *)&zclApp_RadiationLevelParrotsPerHour}},
 
     {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_SENSOR_SENSIVITY, ZCL_UINT16, RW, (void *)&zclApp_Config.SensorSensivity}},
     {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_LED_FEEDBACK, ZCL_DATATYPE_BOOLEAN, RW, (void *)&zclApp_Config.LedFeedback}},
     {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_BUZZER_FEEDBACK, ZCL_DATATYPE_BOOLEAN, RW, (void *)&zclApp_Config.BuzzerFeedback}},
+    {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_SENSORS_COUNT, ZCL_UINT8, RW, (void *)&zclApp_Config.SensorsCount}},
+    {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_SENSORS_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclApp_Config.SensorType}},
+    {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_ALERT_TRESHOLD, ZCL_DATATYPE_UINT16, RW, (void *)&zclApp_Config.AlertTreshold}},
 
 };
 
@@ -107,7 +119,11 @@ SimpleDescriptionFormat_t zclApp_FirstEP = {
 };
 
 void zclApp_ResetAttributesToDefaultValues(void) {
-    zclApp_Config.LedFeedback = TRUE;
-    zclApp_Config.BuzzerFeedback = FALSE;
-    zclApp_Config.SensorSensivity = 65;
+
+    zclApp_Config.SensorSensivity = DEFAULT_SensorSensivity;
+    zclApp_Config.AlertTreshold = DEFAULT_AlertTreshold;
+    zclApp_Config.LedFeedback = DEFAULT_LedFeedback;
+    zclApp_Config.BuzzerFeedback = DEFAULT_BuzzerFeedback;
+    zclApp_Config.SensorsCount = DEFAULT_SensorsCount;
+    zclApp_Config.SensorType = DEFAULT_SensorType;
 }

@@ -1,10 +1,9 @@
 #define TC_LINKKEY_JOIN
 #define NV_INIT
 #define NV_RESTORE
-#define INT_HEAP_LEN 2685
 
 #define TP2_LEGACY_ZC
-//patch sdk
+// patch sdk
 // #define ZDSECMGR_TC_ATTEMPT_DEFAULT_KEY TRUE
 
 #define NWK_AUTO_POLL
@@ -34,9 +33,7 @@
 
 #define BLINK_LEDS TRUE
 
-
-
-//one of this boards
+// one of this boards
 // #define HAL_BOARD_TARGET
 // #define HAL_BOARD_CHDTECH_DEV
 
@@ -44,20 +41,19 @@
 #error "Board type must be defined"
 #endif
 
+#define DO_DEBUG
 
-
-
-
-#if defined(HAL_BOARD_TARGET)
-    #define HAL_UART FALSE
-    #define APP_TX_POWER TX_PWR_PLUS_19
-
-#elif defined(HAL_BOARD_CHDTECH_DEV)
-    #define HAL_UART TRUE
-    #define HAL_UART_ISR 2
-    #define HAL_UART_DMA 1
-    #define APP_TX_POWER TX_PWR_PLUS_4
+#ifdef DO_DEBUG
+#define HAL_UART TRUE
+#define HAL_UART_ISR 2
+#define HAL_UART_DMA 1
+#define INT_HEAP_LEN (2685 - 0x4B - 0xB8)
 #endif
 
+#if defined(HAL_BOARD_TARGET)
+#define APP_TX_POWER TX_PWR_PLUS_19
+#elif defined(HAL_BOARD_CHDTECH_DEV)
+#define APP_TX_POWER TX_PWR_PLUS_4
+#endif
 
 #include "hal_board_cfg.h"

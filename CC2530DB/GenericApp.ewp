@@ -2282,6 +2282,15 @@
     </configuration>
     <group>
         <name>App</name>
+        <group>
+            <name>radiation</name>
+            <file>
+                <name>$PROJ_DIR$\..\Source\calculate_urh.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\Source\calculate_urh.h</name>
+            </file>
+        </group>
         <file>
             <name>$PROJ_DIR$\..\Source\Debug.c</name>
         </file>

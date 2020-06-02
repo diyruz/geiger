@@ -34,6 +34,8 @@
 #include "isr_counter.h"
 
 #include "version.h"
+
+#include "calculate_urh.h"
 /*********************************************************************
  * MACROS
  */
@@ -76,7 +78,7 @@ static void zclApp_RestoreAttributesFromNV(void);
 static void zclApp_SaveAttributesToNV(void);
 
 static ZStatus_t zclApp_ReadWriteAuthCB(afAddrType_t *srcAddr, zclAttrRec_t *pAttr, uint8 oper);
-static void zclApp_RadioactiveEventCB(void);
+static void zclApp_RadioactiveEventCB(uint8 portNum);
 
 /*********************************************************************
  * ZCL General Profile Callback table
@@ -101,10 +103,10 @@ void zclApp_Init(byte task_id) {
 
     zclApp_TaskID = task_id;
 
+    bdb_RegisterSimpleDescriptor(&zclApp_FirstEP);
     zclGeneral_RegisterCmdCallbacks(zclApp_FirstEP.EndPoint, &zclApp_CmdCallbacks);
 
     zcl_registerAttrList(zclApp_FirstEP.EndPoint, zclApp_AttrsCount, zclApp_AttrsFirstEP);
-    bdb_RegisterSimpleDescriptor(&zclApp_FirstEP);
 
     zcl_registerReadWriteCB(zclApp_FirstEP.EndPoint, NULL, zclApp_ReadWriteAuthCB);
 
@@ -117,18 +119,16 @@ void zclApp_Init(byte task_id) {
 
     bdb_StartCommissioning(BDB_COMMISSIONING_MODE_NWK_STEERING | BDB_COMMISSIONING_MODE_FINDING_BINDING);
 
-
     LREP("Build %s \r\n", zclApp_DateCodeNT);
 
     zclApp_InitCounter();
-    zclApp_RegisterCounterCallback(0, zclApp_RadioactiveEventCB);
+    zclApp_RegisterCounterCallback(zclApp_RadioactiveEventCB);
     osal_start_reload_timer(zclApp_TaskID, APP_REPORT_EVT, APP_REPORT_DELAY);
 }
 
 static void zclApp_ProcessCommissioningStatus(bdbCommissioningModeMsg_t *bdbCommissioningModeMsg) {
-    LREP("bdbCommissioningMode=%d bdbCommissioningStatus=%d bdbRemainingCommissioningModes=0x%X\r\n",
-         bdbCommissioningModeMsg->bdbCommissioningMode, bdbCommissioningModeMsg->bdbCommissioningStatus,
-         bdbCommissioningModeMsg->bdbRemainingCommissioningModes);
+    LREP("bdbCommissioningMode=%d bdbCommissioningStatus=%d bdbRemainingCommissioningModes=0x%X\r\n", bdbCommissioningModeMsg->bdbCommissioningMode,
+         bdbCommissioningModeMsg->bdbCommissioningStatus, bdbCommissioningModeMsg->bdbRemainingCommissioningModes);
     switch (bdbCommissioningModeMsg->bdbCommissioningMode) {
     case BDB_COMMISSIONING_INITIALIZATION:
         switch (bdbCommissioningModeMsg->bdbCommissioningStatus) {
@@ -212,6 +212,12 @@ uint16 zclApp_event_loop(uint8 task_id, uint16 events) {
         zclApp_SaveAttributesToNV();
         return (events ^ APP_SAVE_ATTRS_EVT);
     }
+
+    if (events & APP_BLINK_EVT) {
+        LREPMaster("APP_BLINK_EVT\r\n");
+        HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
+        return (events ^ APP_BLINK_EVT);
+    }
     return 0;
 }
 
@@ -226,15 +232,31 @@ static void zclApp_BindNotification(bdbBindNotificationData_t *data) {
 
 static void zclApp_Report(void) {
     halIntState_t intState;
-    uint16 port0Value = 0;
+
     HAL_ENTER_CRITICAL_SECTION(intState);
-    port0Value = zclApp_Port0CounterValue;
+    zclApp_RadiationEventsPerMinute = zclApp_Port0CounterValue;
     zclApp_Port0CounterValue = 0;
     HAL_EXIT_CRITICAL_SECTION(intState);
-    LREP("pulse counter: port0Value=%d \r\n", port0Value);
 
-    zclApp_RadiationEventsPerMinute = port0Value;
-    zclApp_RadiationLevelParrotsPerHour = zclApp_RadiationEventsPerMinute * zclApp_Config.SensorSensivity;
+    switch (zclApp_Config.SensorType) {
+    case SBM_19:
+        zclApp_RadiationLevelParrotsPerHour = calculate_urh_sbm19(zclApp_RadiationEventsPerMinute / zclApp_Config.SensorsCount);
+        break;
+
+    case SBM_20:
+        zclApp_RadiationLevelParrotsPerHour = calculate_urh_sbm20(zclApp_RadiationEventsPerMinute / zclApp_Config.SensorsCount);
+        break;
+
+        // TODO: Add other sensors here
+
+    default:
+        zclApp_RadiationLevelParrotsPerHour = zclApp_RadiationEventsPerMinute * zclApp_Config.SensorSensivity;
+        break;
+    }
+
+    LREP("pulse counter: zclApp_RadiationEventsPerMinute=%d \r\n", zclApp_RadiationEventsPerMinute);
+    LREP("pulse counter: type=%d count=%d radiation=%d\r\n", zclApp_Config.SensorType, zclApp_Config.SensorsCount, zclApp_RadiationLevelParrotsPerHour);
+
     bdb_RepChangedAttrValue(zclApp_FirstEP.EndPoint, ILLUMINANCE, ATTRID_RADIATION_EVENTS_PER_MINUTE);
 }
 
@@ -269,15 +291,16 @@ static void zclApp_RestoreAttributesFromNV(void) {
     }
 }
 
-void zclApp_RadioactiveEventCB(void) {
-    LREPMaster("Event \r\n");
+void zclApp_RadioactiveEventCB(uint8 portNum) {
+    LREP("zclApp_RadioactiveEventCB port=%d led=%d buzzer=%d\r\n", portNum, zclApp_Config.LedFeedback, zclApp_Config.BuzzerFeedback);
+    if (portNum == 0) {
+        if (zclApp_Config.LedFeedback) {
+            osal_set_event(zclApp_TaskID, APP_BLINK_EVT);
+        }
 
-    if (zclApp_Config.LedFeedback) {
-        HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
-    }
-
-    if (zclApp_Config.BuzzerFeedback) {
-        // TODO: buzzer feedback
+        if (zclApp_Config.BuzzerFeedback) {
+            // TODO: buzzer feedback
+        }
     }
 }
 /****************************************************************************
