@@ -32,7 +32,8 @@ extern "C" {
 #define RR (R | ACCESS_REPORTABLE)
 
 #define BASIC ZCL_CLUSTER_ID_GEN_BASIC
-#define POWER_CFG ZCL_CLUSTER_ID_GEN_POWER_CFG
+#define GEN_ON_OFF ZCL_CLUSTER_ID_GEN_ON_OFF
+#define POWER_CFG ZCL_CLUSTER_ID_GEN_ON
 #define ILLUMINANCE ZCL_CLUSTER_ID_MS_ILLUMINANCE_MEASUREMENT
 #define ILLUMINANCE_CONFIG ZCL_CLUSTER_ID_MS_ILLUMINANCE_LEVEL_SENSING_CONFIG
 
@@ -62,7 +63,7 @@ typedef enum {
 typedef struct
 {
     uint16 SensorSensivity;
-    uint16 AlertTreshold;
+    uint32 AlertTreshold;
     uint8 LedFeedback;
     uint8 BuzzerFeedback;
     uint8 SensorsCount;

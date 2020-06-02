@@ -14,6 +14,7 @@
 #define ZCL_BASIC
 #define ZCL_IDENTIFY
 #define ZCL_REPORTING_DEVICE
+#define ZCL_ON_OFF
 
 #define DISABLE_GREENPOWER_BASIC_PROXY
 #define BDB_FINDING_BINDING_CAPABILITY_ENABLED 1
@@ -47,7 +48,7 @@
 #define HAL_UART TRUE
 #define HAL_UART_ISR 2
 #define HAL_UART_DMA 1
-#define INT_HEAP_LEN (2685 - 0x4B - 0xB9)
+#define INT_HEAP_LEN (2685 - 0x4B - 0xBB)
 #endif
 
 #if defined(HAL_BOARD_TARGET)

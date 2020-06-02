@@ -229,6 +229,7 @@ static void zclApp_BindNotification(bdbBindNotificationData_t *data) {
     bindCapacity(&maxEntries, &usedEntries);
     LREP("bindCapacity %d %usedEntries %d \r\n", maxEntries, usedEntries);
 }
+bool lastAlertStatus = FALSE;
 
 static void zclApp_Report(void) {
     halIntState_t intState;
@@ -238,24 +239,38 @@ static void zclApp_Report(void) {
     zclApp_Port0CounterValue = 0;
     HAL_EXIT_CRITICAL_SECTION(intState);
 
+    float countsPerSecond = zclApp_RadiationEventsPerMinute / 60.0 / zclApp_Config.SensorsCount;
+
     switch (zclApp_Config.SensorType) {
     case SBM_19:
-        zclApp_RadiationLevelParrotsPerHour = calculate_urh_sbm19(zclApp_RadiationEventsPerMinute / zclApp_Config.SensorsCount);
+        zclApp_RadiationLevelParrotsPerHour = calculate_urh_sbm19(countsPerSecond);
         break;
 
     case SBM_20:
-        zclApp_RadiationLevelParrotsPerHour = calculate_urh_sbm20(zclApp_RadiationEventsPerMinute / zclApp_Config.SensorsCount);
+        zclApp_RadiationLevelParrotsPerHour = calculate_urh_sbm20(countsPerSecond);
         break;
 
         // TODO: Add other sensors here
 
     default:
-        zclApp_RadiationLevelParrotsPerHour = zclApp_RadiationEventsPerMinute * zclApp_Config.SensorSensivity;
+        zclApp_RadiationLevelParrotsPerHour = countsPerSecond * zclApp_Config.SensorSensivity;
         break;
     }
+    bool alertStatus = zclApp_RadiationLevelParrotsPerHour > zclApp_Config.AlertTreshold;
+    afAddrType_t inderect_DstAddr = {.addrMode = (afAddrMode_t)AddrNotPresent, .endPoint = 0, .addr.shortAddr = 0};
+    LREP("alertStatus %d lastAlertStatus=%d\r\n", alertStatus, lastAlertStatus);
 
-    LREP("pulse counter: zclApp_RadiationEventsPerMinute=%d \r\n", zclApp_RadiationEventsPerMinute);
-    LREP("pulse counter: type=%d count=%d radiation=%d\r\n", zclApp_Config.SensorType, zclApp_Config.SensorsCount, zclApp_RadiationLevelParrotsPerHour);
+    if (alertStatus != lastAlertStatus) {
+        if (alertStatus) {
+            zclGeneral_SendOnOff_CmdOn(zclApp_FirstEP.EndPoint, &inderect_DstAddr, FALSE, bdb_getZCLFrameCounter());
+        } else {
+            zclGeneral_SendOnOff_CmdOff(zclApp_FirstEP.EndPoint, &inderect_DstAddr, FALSE, bdb_getZCLFrameCounter());
+        }
+        lastAlertStatus = alertStatus;
+    }
+
+    LREP("RadiationEventsPerMinute=%d \r\n", zclApp_RadiationEventsPerMinute);
+    LREP("s_type=%d s_count=%d radiation(mR/h)=%ld\r\n", zclApp_Config.SensorType, zclApp_Config.SensorsCount, zclApp_RadiationLevelParrotsPerHour);
 
     bdb_RepChangedAttrValue(zclApp_FirstEP.EndPoint, ILLUMINANCE, ATTRID_RADIATION_EVENTS_PER_MINUTE);
 }

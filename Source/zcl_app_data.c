@@ -84,6 +84,7 @@ CONST zclAttrRec_t zclApp_AttrsFirstEP[] = {
     {BASIC, {ATTRID_CLUSTER_REVISION, ZCL_UINT16, R, (void *)&zclApp_clusterRevision_all}},
     {BASIC, {ATTRID_BASIC_DATE_CODE, ZCL_DATATYPE_CHAR_STR, R, (void *)zclApp_DateCode}},
     {BASIC, {ATTRID_BASIC_SW_BUILD_ID, ZCL_UINT8, R, (void *)&zclApp_ApplicationVersion}},
+
     {ILLUMINANCE, {ATTRID_RADIATION_EVENTS_PER_MINUTE, ZCL_UINT16, RR, (void *)&zclApp_RadiationEventsPerMinute}},
     {ILLUMINANCE, {ATTRID_RADIATION_LEVEL_PER_HOUR, ZCL_UINT32, RR, (void *)&zclApp_RadiationLevelParrotsPerHour}},
 
@@ -92,7 +93,7 @@ CONST zclAttrRec_t zclApp_AttrsFirstEP[] = {
     {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_BUZZER_FEEDBACK, ZCL_DATATYPE_BOOLEAN, RW, (void *)&zclApp_Config.BuzzerFeedback}},
     {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_SENSORS_COUNT, ZCL_UINT8, RW, (void *)&zclApp_Config.SensorsCount}},
     {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_SENSORS_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclApp_Config.SensorType}},
-    {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_ALERT_TRESHOLD, ZCL_DATATYPE_UINT16, RW, (void *)&zclApp_Config.AlertTreshold}},
+    {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_ALERT_TRESHOLD, ZCL_UINT32, RW, (void *)&zclApp_Config.AlertTreshold}},
 
 };
 
@@ -102,7 +103,7 @@ const cId_t zclApp_InClusterList[] = {ZCL_CLUSTER_ID_GEN_BASIC};
 
 #define APP_MAX_INCLUSTERS (sizeof(zclApp_InClusterList) / sizeof(zclApp_InClusterList[0]))
 
-const cId_t zclApp_OutClusterList[] = {ILLUMINANCE};
+const cId_t zclApp_OutClusterList[] = {ILLUMINANCE, GEN_ON_OFF};
 
 #define APP_MAX_OUT_CLUSTERS (sizeof(zclApp_OutClusterList) / sizeof(zclApp_OutClusterList[0]))
 
