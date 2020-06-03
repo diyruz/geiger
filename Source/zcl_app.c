@@ -258,7 +258,8 @@ static void zclApp_Report(void) {
     }
     bool alertStatus = zclApp_RadiationLevelParrotsPerHour > zclApp_Config.AlertTreshold;
     afAddrType_t inderect_DstAddr = {.addrMode = (afAddrMode_t)AddrNotPresent, .endPoint = 0, .addr.shortAddr = 0};
-    LREP("alertStatus %d lastAlertStatus=%d\r\n", alertStatus, lastAlertStatus);
+    LREP("AlertTreshold=%ld radiationLevel=%ld\r\n", zclApp_Config.AlertTreshold, zclApp_RadiationLevelParrotsPerHour);
+    LREP("alertStatus=%d lastAlertStatus=%d\r\n", alertStatus, lastAlertStatus);
 
     if (alertStatus != lastAlertStatus) {
         if (alertStatus) {
