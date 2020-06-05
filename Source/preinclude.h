@@ -42,7 +42,6 @@
 #error "Board type must be defined"
 #endif
 
-#define DO_DEBUG
 
 #ifdef DO_DEBUG
 #define HAL_UART TRUE
@@ -55,6 +54,7 @@
 #define APP_TX_POWER TX_PWR_PLUS_19
 #elif defined(HAL_BOARD_CHDTECH_DEV)
 #define APP_TX_POWER TX_PWR_PLUS_4
+#define DO_DEBUG
 #endif
 
 #include "hal_board_cfg.h"
