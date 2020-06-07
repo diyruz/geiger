@@ -15,7 +15,7 @@
         <Placement>_ 1238 679 2122 1219</Placement>
     </BreakpointUsageDialog>
     <DebugChecksum>
-        <Checksum>97661755</Checksum>
+        <Checksum>1012864217</Checksum>
     </DebugChecksum>
     <CallStack>
         <ShowArgs>0</ShowArgs>
@@ -71,9 +71,8 @@
         <ShowTimeSum>1</ShowTimeSum>
     </DataLog>
     <Breakpoints2>
-        <Bp0>_ 1 "STD_CODE2" "{$PROJ_DIR$\..\Source\isr_counter.c}.86.1" 0 0 1 "" 0 ""</Bp0>
-        <Bp1>_ 0 "STD_CODE2" "{$PROJ_DIR$\..\Source\zcl_app_data.c}.1.1" 0 0 1 "" 0 ""</Bp1>
-        <Count>2</Count>
+        <Bp0>_ 0 "STD_CODE2" "{$PROJ_DIR$\..\Source\zcl_app_data.c}.1.1" 0 0 1 "" 0 ""</Bp0>
+        <Count>1</Count>
     </Breakpoints2>
     <Interrupts>
         <Enabled>1</Enabled>

@@ -36,6 +36,8 @@
 #include "version.h"
 
 #include "calculate_urh.h"
+
+#include "DebugTrace.h"
 /*********************************************************************
  * MACROS
  */
@@ -94,6 +96,7 @@ static zclGeneral_AppCallbacks_t zclApp_CmdCallbacks = {
     NULL                 // RSSI Location Response command
 };
 void zclApp_Init(byte task_id) {
+    // debug_str("Hello \r\n");
     DebugInit();
     zclApp_RestoreAttributesFromNV();
     LREP("Sensivity %d led %d buzzer %d \r\n", zclApp_Config.SensorSensivity, zclApp_Config.LedFeedback, zclApp_Config.BuzzerFeedback);

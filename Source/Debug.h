@@ -33,10 +33,8 @@
 
 extern halUARTCfg_t halUARTConfig;
 
+void vprint(const char *fmt, va_list argp);
 extern bool DebugInit(void);
 extern void LREP(char *format, ...);
-extern void LREPMaster(const char *data);
-
-void vprint(const char *fmt, va_list argp);
-
+extern void LREPMaster(uint8 *data);
 #endif
