@@ -46,8 +46,8 @@
 #define APP_TX_POWER TX_PWR_PLUS_19
 #elif defined(HAL_BOARD_CHDTECH_DEV)
 #define APP_TX_POWER TX_PWR_PLUS_4
-// #define DO_DEBUG_UART
-#define DO_DEBUG_MT
+#define DO_DEBUG_UART
+// #define DO_DEBUG_MT
 #endif
 
 

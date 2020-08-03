@@ -55,6 +55,10 @@
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
     </TermIOLog>
+    <Simulator>
+        <Freq>50000000</Freq>
+        <FreqHi>0</FreqHi>
+    </Simulator>
     <InterruptLog>
         <LogEnabled>0</LogEnabled>
         <GraphEnabled>0</GraphEnabled>
@@ -93,8 +97,4 @@
         <Count>0</Count>
         <SuppressDialog>0</SuppressDialog>
     </Aliases>
-    <Simulator>
-        <Freq>50000000</Freq>
-        <FreqHi>0</FreqHi>
-    </Simulator>
 </settings>

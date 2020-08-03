@@ -69,12 +69,8 @@ byte zclApp_TaskID;
  * LOCAL FUNCTIONS
  */
 
-static void zclApp_BindNotification(bdbBindNotificationData_t *data);
+
 static void zclApp_Report(void);
-// static void zclApp_Rejoin(void);
-
-static void zclApp_ProcessCommissioningStatus(bdbCommissioningModeMsg_t *bdbCommissioningModeMsg);
-
 static void zclApp_BasicResetCB(void);
 static void zclApp_RestoreAttributesFromNV(void);
 static void zclApp_SaveAttributesToNV(void);
@@ -113,14 +109,9 @@ void zclApp_Init(byte task_id) {
 
     zcl_registerReadWriteCB(zclApp_FirstEP.EndPoint, NULL, zclApp_ReadWriteAuthCB);
 
-    zcl_registerForMsg(zclApp_TaskID);
-
-    bdb_RegisterBindNotificationCB(zclApp_BindNotification);
-    bdb_RegisterCommissioningStatusCB(zclApp_ProcessCommissioningStatus);
 
     ZMacSetTransmitPower(APP_TX_POWER);
 
-    bdb_StartCommissioning(BDB_COMMISSIONING_MODE_NWK_STEERING | BDB_COMMISSIONING_MODE_FINDING_BINDING);
 
     LREP("Build %s \r\n", zclApp_DateCodeNT);
 
@@ -129,81 +120,8 @@ void zclApp_Init(byte task_id) {
     osal_start_reload_timer(zclApp_TaskID, APP_REPORT_EVT, APP_REPORT_DELAY);
 }
 
-static void zclApp_ProcessCommissioningStatus(bdbCommissioningModeMsg_t *bdbCommissioningModeMsg) {
-    LREP("bdbCommissioningMode=%d bdbCommissioningStatus=%d bdbRemainingCommissioningModes=0x%X\r\n", bdbCommissioningModeMsg->bdbCommissioningMode,
-         bdbCommissioningModeMsg->bdbCommissioningStatus, bdbCommissioningModeMsg->bdbRemainingCommissioningModes);
-    switch (bdbCommissioningModeMsg->bdbCommissioningMode) {
-    case BDB_COMMISSIONING_INITIALIZATION:
-        switch (bdbCommissioningModeMsg->bdbCommissioningStatus) {
-        case BDB_COMMISSIONING_NO_NETWORK:
-            LREP("No network\r\n");
-            HalLedBlink(HAL_LED_1, 3, 50, 500);
-            break;
-
-        default:
-            break;
-        }
-        break;
-    case BDB_COMMISSIONING_NWK_STEERING:
-        switch (bdbCommissioningModeMsg->bdbCommissioningStatus) {
-        case BDB_COMMISSIONING_SUCCESS:
-            HalLedBlink(HAL_LED_1, 5, 50, 500);
-            LREPMaster("BDB_COMMISSIONING_SUCCESS\r\n");
-            break;
-
-        default:
-            HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
-            break;
-        }
-
-        break;
-
-    case BDB_COMMISSIONING_PARENT_LOST:
-        LREPMaster("BDB_COMMISSIONING_PARENT_LOST\r\n");
-        switch (bdbCommissioningModeMsg->bdbCommissioningStatus) {
-        case BDB_COMMISSIONING_NETWORK_RESTORED:
-
-            break;
-
-        default:
-            HalLedSet(HAL_LED_1, HAL_LED_MODE_FLASH);
-            break;
-        }
-        break;
-    default:
-        break;
-    }
-}
-
 uint16 zclApp_event_loop(uint8 task_id, uint16 events) {
-
     LREP("events 0x%x \r\n", events);
-    afIncomingMSGPacket_t *MSGpkt;
-
-    if (events & SYS_EVENT_MSG) {
-        while ((MSGpkt = (afIncomingMSGPacket_t *)osal_msg_receive(zclApp_TaskID))) {
-            LREP("MSGpkt->hdr.event 0x%X\r\n", MSGpkt->hdr.event);
-            switch (MSGpkt->hdr.event) {
-            case ZDO_STATE_CHANGE:
-                HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
-                LREP("NwkState=%d\r\n", (devStates_t)(MSGpkt->hdr.status));
-                break;
-
-            case ZCL_INCOMING_MSG:
-                LREP("ZCL_INCOMING_MSG 0x%X\r\n", ((zclIncomingMsg_t *)MSGpkt)->zclHdr.commandID);
-                break;
-            default:
-                break;
-            }
-
-            // Release the memory
-            osal_msg_deallocate((uint8 *)MSGpkt);
-        }
-
-        // return unprocessed events
-        return (events ^ SYS_EVENT_MSG);
-    }
-
     if (events & APP_REPORT_EVT) {
         LREPMaster("APP_REPORT_EVT\r\n");
         zclApp_Report();
@@ -224,14 +142,7 @@ uint16 zclApp_event_loop(uint8 task_id, uint16 events) {
     return 0;
 }
 
-static void zclApp_BindNotification(bdbBindNotificationData_t *data) {
-    HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
 
-    LREP("Recieved bind request clusterId=0x%X dstAddr=0x%X ep=%d \r\n", data->clusterId, data->dstAddr, data->ep);
-    uint16 maxEntries = 0, usedEntries = 0;
-    bindCapacity(&maxEntries, &usedEntries);
-    LREP("bindCapacity %d %usedEntries %d \r\n", maxEntries, usedEntries);
-}
 bool lastAlertStatus = FALSE;
 
 static void zclApp_Report(void) {

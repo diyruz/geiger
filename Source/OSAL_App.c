@@ -13,6 +13,9 @@
 #endif
 // #include "stub_aps.h"
 
+#include "commissioning.h"
+#include "factory_reset.h"
+#include "Debug.h"
 
 // #include "bdb_touchlink_target.h"
 
@@ -31,7 +34,9 @@ const pTaskEventHandlerFn tasksArr[] = {macEventLoop,
                                         // touchLinkTarget_event_loop,
                                         zcl_event_loop,
                                         bdb_event_loop,
-                                        zclApp_event_loop};
+                                        zclApp_event_loop,
+                                        zclCommissioning_event_loop,
+                                        zclFactoryResetter_loop};
 
 const uint8 tasksCnt = sizeof(tasksArr) / sizeof(tasksArr[0]);
 uint16 *tasksEvents;
@@ -53,7 +58,9 @@ void osalInitTasks(void) {
     // touchLinkTarget_Init( taskID++ );
     zcl_Init(taskID++);
     bdb_Init(taskID++);
-    zclApp_Init(taskID);
+    zclApp_Init(taskID++);
+    zclCommissioning_Init(taskID++);
+    zclFactoryResetter_Init(taskID++);
 }
 
 /*********************************************************************

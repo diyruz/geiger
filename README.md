@@ -2,12 +2,12 @@
 ![counter](./images/geiger.jpg)
 
 # How to join
-## Use touchlink reset
+## Reset to FN rebooting device 5 times with interval less than 10 seconds, led will start flashing during reset
 
 # How to change parameters
 Sensitivity:
 `mosquitto_pub -t "zigbee2mqtt/FN/BUTTON_NUM/set/sensitivity" -m '100'`
-This attribute will be used on reporting, pulsesCount * sensitivity. 
+This attribute will be used on reporting, pulsesCount * sensitivity.
 You can use this attribute to setup reporting in your prefered units
 radiationDosePerHour = pulsesCount * sensitivity
 

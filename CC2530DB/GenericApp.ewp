@@ -469,6 +469,7 @@
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$</state>
                     <state>$PROJ_DIR$\..\Source</state>
+                    <state>$PROJ_DIR$\..\zstack-lib</state>
                     <state>$PROJ_DIR$\..\..\Source</state>
                     <state>$PROJ_DIR$\..\..\..\ZMain\TI2530DB</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Components\hal\include</state>
@@ -1609,6 +1610,7 @@
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$</state>
                     <state>$PROJ_DIR$\..\Source</state>
+                    <state>$PROJ_DIR$\..\zstack-lib</state>
                     <state>$PROJ_DIR$\..\..\Source</state>
                     <state>$PROJ_DIR$\..\..\..\ZMain\TI2530DB</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Components\hal\include</state>
@@ -2292,12 +2294,6 @@
             </file>
         </group>
         <file>
-            <name>$PROJ_DIR$\..\Source\Debug.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Source\Debug.h</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\Source\isr_counter.c</name>
         </file>
         <file>
@@ -2943,6 +2939,27 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\..\ZMain\TI2530DB\ZMain.c</name>
+        </file>
+    </group>
+    <group>
+        <name>zstack-lib</name>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\commissioning.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\commissioning.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\Debug.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\Debug.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\factory_reset.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\factory_reset.h</name>
         </file>
     </group>
 </project>
