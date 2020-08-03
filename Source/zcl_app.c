@@ -108,6 +108,7 @@ void zclApp_Init(byte task_id) {
     zcl_registerAttrList(zclApp_FirstEP.EndPoint, zclApp_AttrsCount, zclApp_AttrsFirstEP);
 
     zcl_registerReadWriteCB(zclApp_FirstEP.EndPoint, NULL, zclApp_ReadWriteAuthCB);
+    zcl_registerForMsg(zclApp_TaskID);
 
 
     ZMacSetTransmitPower(APP_TX_POWER);
