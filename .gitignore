@@ -52,6 +52,7 @@ CC2530DB/CHDTECH_DEV
 CC2530DB/FREEPAD*
 CC2530DB/flower
 CC2530DB/HAL_BOARD_TARGET
+CC2530DB/DIYRuZ*
 Source/version.c
 !.vscode/
 .vscode/settings.json
