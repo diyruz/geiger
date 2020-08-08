@@ -168,7 +168,7 @@ static void zclApp_Report(void) {
         // TODO: Add other sensors here
 
     default:
-        zclApp_RadiationLevelParrotsPerHour = countsPerSecond * zclApp_Config.SensorSensivity;
+        zclApp_RadiationLevelParrotsPerHour = (uint32) (countsPerSecond * zclApp_Config.SensorSensivity);
         break;
     }
     bool alertStatus = zclApp_RadiationLevelParrotsPerHour > zclApp_Config.AlertTreshold;
