@@ -120,6 +120,27 @@ void zclApp_Init(byte task_id) {
 
 uint16 zclApp_event_loop(uint8 task_id, uint16 events) {
     LREP("events 0x%x \r\n", events);
+    if (events & SYS_EVENT_MSG) {
+        afIncomingMSGPacket_t *MSGpkt;
+        while ((MSGpkt = (afIncomingMSGPacket_t *)osal_msg_receive(zclApp_TaskID))) {
+            LREP("MSGpkt->hdr.event 0x%X clusterId=0x%X\r\n", MSGpkt->hdr.event, MSGpkt->clusterId);
+            switch (MSGpkt->hdr.event) {
+            case ZCL_INCOMING_MSG:
+                if (((zclIncomingMsg_t *)MSGpkt)->attrCmd) {
+                    osal_mem_free(((zclIncomingMsg_t *)MSGpkt)->attrCmd);
+                }
+                break;
+
+            default:
+                break;
+            }
+
+            // Release the memory
+            osal_msg_deallocate((uint8 *)MSGpkt);
+        }
+        // return unprocessed events
+        return (events ^ SYS_EVENT_MSG);
+    }
     if (events & APP_REPORT_EVT) {
         LREPMaster("APP_REPORT_EVT\r\n");
         zclApp_Report();
