@@ -1142,7 +1142,7 @@
         </settings>
     </configuration>
     <configuration>
-        <name>HAL_BOARD_TARGET</name>
+        <name>DIYRuZ_Geiger</name>
         <toolchain>
             <name>8051</name>
         </toolchain>
@@ -1253,15 +1253,15 @@
                 </option>
                 <option>
                     <name>ExePath</name>
-                    <state>HAL_BOARD_TARGET\Exe</state>
+                    <state>DIYRuZ_Geiger\Exe</state>
                 </option>
                 <option>
                     <name>ObjPath</name>
-                    <state>HAL_BOARD_TARGET\Obj</state>
+                    <state>DIYRuZ_Geiger\Obj</state>
                 </option>
                 <option>
                     <name>ListPath</name>
-                    <state>HAL_BOARD_TARGET\List</state>
+                    <state>DIYRuZ_Geiger\List</state>
                 </option>
                 <option>
                     <name>GOutputBinary</name>
@@ -2113,7 +2113,7 @@
                 </option>
                 <option>
                     <name>ExtraOutputFile</name>
-                    <state>$PROJ_DIR$\..\firmwares\DIYRuZ_Geiger.hex</state>
+                    <state>$PROJ_DIR$\..\firmwares\$CONFIG_NAME$.hex</state>
                 </option>
                 <option>
                     <name>ExtraOutputFormat</name>
@@ -2852,7 +2852,7 @@
             <name>$PROJ_DIR$\..\..\..\Tools\CC2530DB\f8wCoord.cfg</name>
             <excluded>
                 <configuration>CHDTECH_DEV</configuration>
-                <configuration>HAL_BOARD_TARGET</configuration>
+                <configuration>DIYRuZ_Geiger</configuration>
             </excluded>
         </file>
         <file>
@@ -2862,7 +2862,7 @@
             <name>$PROJ_DIR$\..\..\..\Tools\CC2530DB\f8wRouter.cfg</name>
             <excluded>
                 <configuration>CHDTECH_DEV</configuration>
-                <configuration>HAL_BOARD_TARGET</configuration>
+                <configuration>DIYRuZ_Geiger</configuration>
             </excluded>
         </file>
         <file>
