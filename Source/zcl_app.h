@@ -18,7 +18,6 @@ extern "C" {
 // Application Events
 #define APP_REPORT_EVT      0x0001
 #define APP_SAVE_ATTRS_EVT  0x0002
-#define APP_BLINK_EVT       0x0004
 
 /*********************************************************************
  * MACROS

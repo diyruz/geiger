@@ -69,7 +69,6 @@ byte zclApp_TaskID;
  * LOCAL FUNCTIONS
  */
 
-
 static void zclApp_Report(void);
 static void zclApp_BasicResetCB(void);
 static void zclApp_RestoreAttributesFromNV(void);
@@ -110,9 +109,7 @@ void zclApp_Init(byte task_id) {
     zcl_registerReadWriteCB(zclApp_FirstEP.EndPoint, NULL, zclApp_ReadWriteAuthCB);
     zcl_registerForMsg(zclApp_TaskID);
 
-
     ZMacSetTransmitPower(APP_TX_POWER);
-
 
     LREP("Build %s \r\n", zclApp_DateCodeNT);
 
@@ -134,15 +131,8 @@ uint16 zclApp_event_loop(uint8 task_id, uint16 events) {
         zclApp_SaveAttributesToNV();
         return (events ^ APP_SAVE_ATTRS_EVT);
     }
-
-    if (events & APP_BLINK_EVT) {
-        LREPMaster("APP_BLINK_EVT\r\n");
-        HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
-        return (events ^ APP_BLINK_EVT);
-    }
     return 0;
 }
-
 
 bool lastAlertStatus = FALSE;
 
@@ -168,7 +158,7 @@ static void zclApp_Report(void) {
         // TODO: Add other sensors here
 
     default:
-        zclApp_RadiationLevelParrotsPerHour = (uint32) (countsPerSecond * zclApp_Config.SensorSensivity);
+        zclApp_RadiationLevelParrotsPerHour = (uint32)(countsPerSecond * zclApp_Config.SensorSensivity);
         break;
     }
     bool alertStatus = zclApp_RadiationLevelParrotsPerHour > zclApp_Config.AlertTreshold;
@@ -226,7 +216,7 @@ void zclApp_RadioactiveEventCB(uint8 portNum) {
     LREP("zclApp_RadioactiveEventCB port=%d led=%d buzzer=%d\r\n", portNum, zclApp_Config.LedFeedback, zclApp_Config.BuzzerFeedback);
     if (portNum == 0) {
         if (zclApp_Config.LedFeedback) {
-            osal_set_event(zclApp_TaskID, APP_BLINK_EVT);
+            HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
         }
 
         if (zclApp_Config.BuzzerFeedback) {
