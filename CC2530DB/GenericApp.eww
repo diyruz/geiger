@@ -12,7 +12,11 @@
             </member>
             <member>
                 <project>GenericApp</project>
-                <configuration>HAL_BOARD_TARGET</configuration>
+                <configuration>DIYRuZ_Geiger</configuration>
+            </member>
+            <member>
+                <project>GenericApp</project>
+                <configuration>DIYRuZ_Geiger_ED</configuration>
             </member>
         </batchDefinition>
     </batchBuild>
