@@ -2282,7 +2282,7 @@
             <data />
         </settings>
     </configuration>
-        <configuration>
+    <configuration>
         <name>DIYRuZ_Geiger_ED</name>
         <toolchain>
             <name>8051</name>
