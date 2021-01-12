@@ -74,16 +74,16 @@ uint32 zclApp_RadiationLevelParrotsPerHour = 0; // parrots per hour
  */
 
 CONST zclAttrRec_t zclApp_AttrsFirstEP[] = {
+    {BASIC, {ATTRID_BASIC_ZCL_VERSION, ZCL_UINT8, R, (void *)&zclApp_ZCLVersion}},
     {BASIC, {ATTRID_BASIC_APPL_VERSION, ZCL_UINT8, R, (void *)&zclApp_ApplicationVersion}},
     {BASIC, {ATTRID_BASIC_STACK_VERSION, ZCL_UINT8, R, (void *)&zclApp_StackVersion}},
     {BASIC, {ATTRID_BASIC_HW_VERSION, ZCL_UINT8, R, (void *)&zclApp_HWRevision}},
-    {BASIC, {ATTRID_BASIC_ZCL_VERSION, ZCL_UINT8, R, (void *)&zclApp_ZCLVersion}},
     {BASIC, {ATTRID_BASIC_MANUFACTURER_NAME, ZCL_DATATYPE_CHAR_STR, R, (void *)zclApp_ManufacturerName}},
     {BASIC, {ATTRID_BASIC_MODEL_ID, ZCL_DATATYPE_CHAR_STR, R, (void *)zclApp_ModelId}},
-    {BASIC, {ATTRID_BASIC_POWER_SOURCE, ZCL_DATATYPE_ENUM8, R, (void *)&zclApp_PowerSource}},
-    {BASIC, {ATTRID_CLUSTER_REVISION, ZCL_UINT16, R, (void *)&zclApp_clusterRevision_all}},
     {BASIC, {ATTRID_BASIC_DATE_CODE, ZCL_DATATYPE_CHAR_STR, R, (void *)zclApp_DateCode}},
+    {BASIC, {ATTRID_BASIC_POWER_SOURCE, ZCL_DATATYPE_ENUM8, R, (void *)&zclApp_PowerSource}},
     {BASIC, {ATTRID_BASIC_SW_BUILD_ID, ZCL_UINT8, R, (void *)&zclApp_ApplicationVersion}},
+    {BASIC, {ATTRID_CLUSTER_REVISION, ZCL_UINT16, R, (void *)&zclApp_clusterRevision_all}},
 
     {ILLUMINANCE, {ATTRID_RADIATION_EVENTS_PER_MINUTE, ZCL_UINT16, RR, (void *)&zclApp_RadiationEventsPerMinute}},
     {ILLUMINANCE, {ATTRID_RADIATION_LEVEL_PER_HOUR, ZCL_UINT32, RR, (void *)&zclApp_RadiationLevelParrotsPerHour}},
@@ -94,7 +94,6 @@ CONST zclAttrRec_t zclApp_AttrsFirstEP[] = {
     {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_SENSORS_COUNT, ZCL_UINT8, RW, (void *)&zclApp_Config.SensorsCount}},
     {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_SENSORS_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclApp_Config.SensorType}},
     {ILLUMINANCE_CONFIG, {ATTRID_RADIATION_ALERT_TRESHOLD, ZCL_UINT32, RW, (void *)&zclApp_Config.AlertTreshold}},
-
 };
 
 uint8 CONST zclApp_AttrsCount = (sizeof(zclApp_AttrsFirstEP) / sizeof(zclApp_AttrsFirstEP[0]));
