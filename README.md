@@ -12,19 +12,19 @@ Since Jager has a Zigbee network at home, the device will be an element of this 
 The circuit does not contain rare elements and is typical for this type of device.
 
 ### Diagram
-![](./images/DIYRuZ_GEIGER_05.jpg)
+![](/images/DIYRuZ_GEIGER_05.jpg)
 
 The central elements are the SBM-20 Geiger counter and the E18-MS1PA1-PCB Zigbee module. The scheme includes the ability to use either one or two counters to improve the measurement accuracy.
-![](./images/sbm-20.jpg)  
+![](/images/sbm-20.jpg)  
 
 GAINTA 407 case was selected based on the meter size.
-![](./images/G407.jpg)  
+![](/images/G407.jpg)  
 
 ### PCB
 The board was designed by EasyEDA
-![](./images/DIYRuZ_GEIGER_06.jpg)  
+![](/images/DIYRuZ_GEIGER_06.jpg)  
 
-![](./images/DIYRuZ_GEIGER_07.jpg)  
+![](/images/DIYRuZ_GEIGER_07.jpg)  
 
 Production at JLCPCB
 ![](./images/DIYRuZ_GEIGER_09.jpg)  
@@ -48,11 +48,11 @@ If the board is correctly assembled, after downloading the firmware, it will be 
 ### Support
 Device support is implemented in zigbee2mqtt and SLS Gateway
 
-![](./images/z2m_about.png)   
-![](./images/z2m_exposes.png)   
+![](/images/z2m_about.png)   
+![](/images/z2m_exposes.png)   
 
-![](./images/DIYRuZ_GEIGER_16.jpg)  
-![](./images/DIYRuZ_GEIGER_17.jpg)  
+![](/images/DIYRuZ_GEIGER_16.jpg)  
+![](/images/DIYRuZ_GEIGER_17.jpg)  
 
 ### Settings
 * alert_threshold - set the level in μR / h, when exceeded, the alarm will be triggered
@@ -72,18 +72,18 @@ Device support is implemented in zigbee2mqtt and SLS Gateway
 * sensors_count - number of installed counters
 
 The device is also a router in the Zigbee network, which allows you to increase its coverage.
-![](./images/DIYRuZ_GEIGER_19.jpg)  
+![](/images/DIYRuZ_GEIGER_19.jpg)  
 
 The final assembly includes installing the board into the case and making an end cap with holes for the LED and micro USB connector. These holes can be made in a standard plug, but Jager drew and printed on a 3D printer
-![](./images/DIYRuZ_GEIGER_20.jpg)  
+![](/images/DIYRuZ_GEIGER_20.jpg)  
 
-![](./images/DIYRuZ_GEIGER_21.jpg)  
+![](/images/DIYRuZ_GEIGER_21.jpg)  
 
 That's all, the device is ready to go.
 
 
 In the photos you can see that Jager's counters are damaged, it so happened that Jager got just such. In fact, the damage is much more serious and this can be seen in the photo below, but while maintaining the tightness, they do not affect the operation of the meters.
-![](./images/DIYRuZ_GEIGER_13.jpg)  
+![](/images/DIYRuZ_GEIGER_13.jpg)  
 
 
 ### How to join
