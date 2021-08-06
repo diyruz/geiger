@@ -6,6 +6,10 @@ The device is not designed to measure the level of radiation in the epicenter of
 There are many amateur dosimeter projects, for example one and two.
 All of them are built according to almost the same schemes associated with the features of the Geiger counters used. The principle of operation of Geiger counters is based on the effect of impact ionization of a gaseous medium under the action of radioactive particles in the interelectrode space at a high accelerating voltage. Accordingly, the meter requires a high voltage source.
 
+### How to compile
+Follow this article https://zigdevwiki.github.io/Begin/IAR_install/
+
+
 **ATTENTION! THE DEVICE CONTAINS A HIGH VOLTAGE OF 400 VOLTS**
 
 Since Jager has a Zigbee network at home, the device will be an element of this network.
