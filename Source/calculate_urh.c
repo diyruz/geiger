@@ -11,13 +11,13 @@ uint32 calculate_urh_sbm20(float cps) {
     if (cps < 200) {
         return round(cps * (36)); // 36
     } else if (cps >= 200 && cps < 400) {
-        return round(cps * ((39 * cps - 600))); // 37.5
+        return round(39 * cps - 600); // 37.5
     } else if (cps >= 400 && cps < 800) {
-        return round(cps * ((56.25 * cps - 7500))); // 46.875
+        return round(56.25 * cps - 7500); // 46.875
     } else if (cps >= 800 && cps < 1400) {
-        return round(cps * ((66.6667 * cps - 15833.3))); // 55.357
+        return round(66.6667 * cps - 15833.3); // 55.357
     } else if (cps >= 1400 && cps < 2000) {
-        return round(cps * ((87.5 * cps - 45000))); // 65
+        return round(87.5 * cps - 45000); // 65
     } else {
         return 130000; // Предел измерений
     }
@@ -28,14 +28,14 @@ uint32 calculate_urh_sbm19(float cps) {
     if (cps < 200) {
         return round(cps * (9)); // 9
     } else if (cps >= 200 && cps < 400) {
-        return round(cps * ((9.75 * cps - 150))); // 9.375
+        return round(9.75 * cps - 150); // 9.375
     } else if (cps >= 400 && cps < 800) {
-        return round(cps * ((14.0625 * cps - 1875))); // 11.719
+        return round(14.0625 * cps - 1875); // 11.719
     } else if (cps >= 800 && cps < 1400) {
-        return round(cps * ((16.6667 * cps - 3958.33))); // 13.839
+        return round(16.6667 * cps - 3958.33); // 13.839
     } else if (cps >= 1400 && cps < 2000) {
-        return round(cps * ((21.875 * cps - 11250))); // 16.25
+        return round(21.875 * cps - 11250); // 16.25
     } else {
-        return 130000; // Предел измерений
+        return 32500; // Предел измерений (SBM-20 / 4)
     }
 }
